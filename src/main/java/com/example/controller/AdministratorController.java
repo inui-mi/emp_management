@@ -3,6 +3,7 @@ package com.example.controller;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -77,7 +78,7 @@ public class AdministratorController {
 		// フォームからドメインにプロパティ値をコピー
 		BeanUtils.copyProperties(form, administrator);
 		administratorService.insert(administrator);
-		return "employee/list";
+		return "redirect:/";
 	}
 
 	/////////////////////////////////////////////////////
@@ -106,8 +107,28 @@ public class AdministratorController {
 			redirectAttributes.addFlashAttribute("errorMessage", "メールアドレスまたはパスワードが不正です。");
 			return "redirect:/";
 		}
+
+		session.setAttribute("administrator", administrator);
+
 		return "redirect:/employee/showList";
 	}
+
+	@GetMapping("/employee/showList")
+	
+	public String showEmployeeList(Model model) {
+    	// セッションから管理者情報を取得
+		Administrator administrator = (Administrator) session.getAttribute("administrator");
+
+    	// 管理者が存在すれば、その名前をモデルに追加
+    	if (administrator != null) {
+			model.addAttribute("administratorName", administrator.getName()); // 管理者の名前をモデルに追加
+		}else{
+			return "redirect:/";
+
+		}
+		return "employee/list";  // 従業員一覧画面へ
+}
+
 
 	/////////////////////////////////////////////////////
 	// ユースケース：ログアウトをする
@@ -122,5 +143,7 @@ public class AdministratorController {
 		session.invalidate();
 		return "redirect:/";
 	}
+
+	
 
 }
