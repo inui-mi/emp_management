@@ -72,6 +72,7 @@ public class AdministratorController {
 	 * 管理者情報を登録します.
 	 * 
 	 * @param form 管理者情報用フォーム
+<<<<<<< Updated upstream
 	 * @param bindingResult バリデーションエラーを格納するオブジェクト
 	 * @return ログイン画面へリダイレクト
 	 */
@@ -87,6 +88,16 @@ public class AdministratorController {
             return "administrator/insert";  // エラーメッセージと共にフォームに戻る
         }
 		
+=======
+	 * @param result バインディング結果
+	 * @return ログイン画面へリダイレクト
+	 */
+	@PostMapping("/insert")
+	public String insert(@Validated InsertAdministratorForm form, BindingResult result, Model model) {
+		if (result.hasErrors()) {
+            return "administrator/insert";  // エラーがある場合、再度登録画面を表示
+        }
+>>>>>>> Stashed changes
 		Administrator administrator = new Administrator();
 		// フォームからドメインにプロパティ値をコピー
 		BeanUtils.copyProperties(form, administrator);
