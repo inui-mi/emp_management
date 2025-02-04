@@ -42,7 +42,7 @@
 
             <!-- ここにモックのform要素を貼り付けます -->
 
-            <form method="post" th:action="@{/login}">
+            <form method="post" th:action="@{/login}" th:object="${loginForm}">
               <fieldset>
                 <legend>ログイン</legend>
                 <div class="form-group">
@@ -78,7 +78,7 @@
                   </button>
                 </div>
                 <div class="form-group">
-                  <a href="insert.html" th:href="@{/toInsert}"
+                  <a th:href="@{/toInsert}"
                     >管理者登録はこちらから</a
                   >
                 </div>

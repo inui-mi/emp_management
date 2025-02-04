@@ -44,7 +44,6 @@
 
             <form
               method="post"
-              action="login.html"
               th:action="@{/insert}"
               th:object="${insertAdministratorForm}"
             >
@@ -58,10 +57,10 @@
                     <div class="col-sm-12">
                       <label for="name"> 氏名: </label>
                       <label
+                        th:if="${#fields.hasErrors('name')}"
                         th:errors="*{name}"
                         class="error-messages"
                       >
-                        氏名を入力してください
                       </label>
                       <input
                         type="text"
@@ -71,8 +70,16 @@
                         placeholder="山田太郎"
                         th:field="*{name}"
                         th:errorclass="error-input"
-                        value="山田太郎"
+                        maxlength="110"
+                        pattern="^[\\p{L}ー々一-龯ぁ-んァ-ヶ]+$"
+                        title="氏名を入力してください"
+                        required
                       />
+                      <div th:if="${#fields.hasErrors('name')}" class="error">
+                        <ul>
+                            <li th:each="err : ${#fields.errors('name')}" th:text="${err}"></li>
+                        </ul>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -88,7 +95,7 @@
                         メールアドレスを入力してください
                       </label>
                       <input
-                        type="text"
+                        type="email"
                         name="mailAddress"
                         id="mailAddress"
                         class="form-control"
@@ -96,7 +103,16 @@
                         th:field="*{mailAddress}"
                         th:errorclass="error-input"
                         value="yamada@mail.com"
+                        maxlength="100"
+                        pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                        title="メールアドレスの形式が不正です"
+                        required
                       />
+                      <div th:if="${#fields.hasErrors('mailAddress')}" class="error">
+                        <ul>
+                            <li th:each="err : ${#fields.errors('mailAddress')}" th:text="${err}"></li>
+                        </ul>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -120,7 +136,16 @@
                         th:field="*{password}"
                         th:errorclass="error-input"
                         value="xxxxxxxx"
+                        maxlength="100"
+                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,20}$"
+                        title="パスワードは8文字以上、20文字以下で英大文字、小文字、数字をそれぞれ少なくとも1文字は使用してください"
+                        required
                       />
+                      <div th:if="${#fields.hasErrors('password')}" class="error">
+                        <ul>
+                            <li th:each="err : ${#fields.errors('password')}" th:text="${err}"></li>
+                        </ul>
+                    </div>
                     </div>
                   </div>
                 </div>

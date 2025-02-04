@@ -42,7 +42,7 @@
               <span class="icon-bar"></span>
             </button>
             <a
-              class="navbar-brand" th:href="@{/employeeList}"
+              class="navbar-brand" th:href="@{/employee/employeeList}"
             >
               <!-- 企業ロゴ -->
               <img
@@ -59,7 +59,7 @@
           >
             <ul class="nav navbar-nav">
               <li class="active">
-                <a th:href="@{/employeeList}">従業員管理</a>
+                <a th:href="@{/employee/employeeList}">従業員管理</a>
               </li>
             </ul>
             <p class="navbar-text navbar-right">
@@ -75,9 +75,22 @@
       <!-- パンくずリスト -->
       <ol class="breadcrumb">
         <li class="active">
-          <a th:href="@{/employeeList}">従業員リスト</a>
+          <a th:href="@{/employee/employeeList}">従業員リスト</a>
         </li>
       </ol>
+
+      <!-- 検索フォーム -->
+    <div class="row">
+      <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+        <form action="#" method="get" th:action="@{/employee/employeeList}" class="form-inline">
+          <div class="form-group">
+            <label for="searchName">名前:</label>
+            <input type="text" id="searchName" name="searchName" class="form-control" th:value="${searchName}" />
+          </div>
+        <button type="submit" class="btn btn-primary">検索</button>
+      </form>
+      </div>
+    </div>
 
       <!-- table -->
       <div class="row">

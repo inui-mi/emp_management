@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.domain.Employee;
 import com.example.form.UpdateEmployeeForm;
@@ -28,6 +29,10 @@ public class EmployeeController {
 
 	@Autowired
 	private EmployeeService employeeService;
+
+	public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
 
 	/**
 	 * 使用するフォームオブジェクトをリクエストスコープに格納する.
@@ -48,12 +53,35 @@ public class EmployeeController {
 	 * @param model モデル
 	 * @return 従業員一覧画面
 	 */
-	@GetMapping("/employeeList")
-	public String showList(Model model) {
-		List<Employee> employeeList = employeeService.showList();
+
+	@GetMapping("/employee/employeeList")
+	public String showEmployeeList(
+			@RequestParam(name = "searchName", required = false) String searchName, 
+			Model model) {
+		
+		// 名前による検索（名前がnullまたは空の場合は全員表示）
+		List<Employee> employeeList = employeeService.searchEmployeesByName(searchName);
+
 		model.addAttribute("employeeList", employeeList);
-		return "employee/list";
+		model.addAttribute("searchName", searchName);  // 検索文字列を保持してフォームに再表示
+		return "employee/employeeList";  // employeeList.htmlを返す
 	}
+	
+	// @GetMapping("/employeeList")
+	// public String showList(Model model) {
+	// 	List<Employee> employeeList = employeeService.showList();
+	// 	model.addAttribute("employeeList", employeeList);
+	// 	return "employee/list";
+	// }
+
+	public String listEmployees(
+            @RequestParam(value = "searchName", required = false) String searchName,
+            Model model) {
+        List<Employee> employeeList = employeeService.searchEmployeesByName(searchName);
+        model.addAttribute("employeeList", employeeList);
+        model.addAttribute("searchName", searchName);  // 検索語句をフォームに再表示
+        return "employeeList";  // 従業員一覧ページのビュー名
+    }
 
 	/////////////////////////////////////////////////////
 	// ユースケース：従業員詳細を表示する
