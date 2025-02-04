@@ -52,4 +52,13 @@ public class EmployeeService {
 	public void update(Employee employee) {
 		employeeRepository.update(employee);
 	}
+
+	/**
+     * 名前を部分一致で検索します。
+     * @param searchName 検索条件
+     * @return 名前が部分一致する従業員一覧
+     */
+    public List<Employee> findByNameContainingIgnoreCase(String searchName) {
+        return employeeRepository.findByNameContainingIgnoreCase(searchName);
+    }
 }
