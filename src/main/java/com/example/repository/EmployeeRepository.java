@@ -83,4 +83,13 @@ public class EmployeeRepository {
 		String updateSql = "UPDATE employees SET dependents_count=:dependentsCount WHERE id=:id";
 		template.update(updateSql, param);
 	}
+
+	public List<Employee> findByNameContainingIgnoreCase(String searchName) {
+        String sql = "SELECT id, name, image, gender, hire_date, mail_address, zip_code, address, telephone, salary, characteristics, dependents_count " +
+                    "FROM employees WHERE LOWER(name) LIKE :searchName";
+					String searchPattern = "%" + searchName.toLowerCase() + "%";
+        MapSqlParameterSource param = new MapSqlParameterSource().addValue("searchName", searchPattern);
+        
+		return template.query(sql, param, EMPLOYEE_ROW_MAPPER);
+	}
 }

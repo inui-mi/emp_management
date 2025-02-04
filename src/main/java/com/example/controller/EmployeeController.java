@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.domain.Employee;
 import com.example.form.UpdateEmployeeForm;
@@ -46,12 +47,20 @@ public class EmployeeController {
 	 * 従業員一覧画面を出力します.
 	 * 
 	 * @param model モデル
+	 * @param searchName 検索条件の名前
 	 * @return 従業員一覧画面
 	 */
 	@GetMapping("/employeeList")
-	public String showList(Model model) {
-		List<Employee> employeeList = employeeService.showList();
+	public String showList(@RequestParam(value = "searchName", required = false) String searchName, Model model) {
+		List<Employee> employeeList;
+
+		if (searchName != null && !searchName.isEmpty()) {
+            employeeList = employeeService.findByNameContainingIgnoreCase(searchName);
+        } else {
+            employeeList = employeeService.showList();
+        }
 		model.addAttribute("employeeList", employeeList);
+		model.addAttribute("searchName", searchName);  // 検索条件も渡してフォームに値を保持する
 		return "employee/list";
 	}
 

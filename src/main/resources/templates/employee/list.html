@@ -79,6 +79,19 @@
         </li>
       </ol>
 
+      <!-- 検索フォーム -->
+    <div class="row">
+      <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+        <form action="#" method="get" th:action="@{/employee/employeeList}" class="form-inline">
+          <div class="form-group">
+            <label for="searchName">名前:</label>
+            <input type="text" id="searchName" name="searchName" class="form-control" th:value="${searchName}" />
+          </div>
+        <button type="submit" class="btn btn-primary">検索</button>
+      </form>
+      </div>
+    </div>
+
       <!-- table -->
       <div class="row">
         <div
