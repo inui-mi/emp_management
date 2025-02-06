@@ -4,6 +4,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,10 +72,32 @@ public class AdministratorController {
 	 * 管理者情報を登録します.
 	 * 
 	 * @param form 管理者情報用フォーム
+<<<<<<< Updated upstream
+	 * @param bindingResult バリデーションエラーを格納するオブジェクト
 	 * @return ログイン画面へリダイレクト
 	 */
 	@PostMapping("/insert")
-	public String insert(InsertAdministratorForm form) {
+	public String insert(@Validated @ModelAttribute InsertAdministratorForm form, BindingResult bindingResult, Model model) {
+		if (administratorService.isMailAddressDuplicate(form.getMailAddress())) {
+            bindingResult.rejectValue("mailAddress", "mailAddress.duplicate", "メールアドレスが重複しています");
+        }
+
+		
+        if (bindingResult.hasErrors()) {
+			model.addAttribute("insertAdminidtratorForm", form);
+            return "administrator/insert";  // エラーメッセージと共にフォームに戻る
+        }
+		
+=======
+	 * @param result バインディング結果
+	 * @return ログイン画面へリダイレクト
+	 */
+	@PostMapping("/insert")
+	public String insert(@Validated InsertAdministratorForm form, BindingResult result, Model model) {
+		if (result.hasErrors()) {
+            return "administrator/insert";  // エラーがある場合、再度登録画面を表示
+        }
+>>>>>>> Stashed changes
 		Administrator administrator = new Administrator();
 		// フォームからドメインにプロパティ値をコピー
 		BeanUtils.copyProperties(form, administrator);
@@ -119,14 +143,14 @@ public class AdministratorController {
     	// セッションから管理者情報を取得
 		Administrator administrator = (Administrator) session.getAttribute("administrator");
 
-    	// 管理者が存在すれば、その名前をモデルに追加
-    	if (administrator != null) {
-			model.addAttribute("administratorName", administrator.getName()); // 管理者の名前をモデルに追加
-		}else{
-			return "redirect:/";
+    // 管理者が存在しない場合、ログイン画面へリダイレクト
+    if (administrator == null) {
+        return "redirect:/";
+    }
 
-		}
-		return "employee/list";  // 従業員一覧画面へ
+    // 管理者が存在する場合、その名前をモデルに追加
+    model.addAttribute("administratorName", administrator.getName());
+    return "employee/list";  // 従業員一覧画面へ
 }
 
 

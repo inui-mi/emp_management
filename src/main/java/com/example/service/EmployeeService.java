@@ -22,14 +22,20 @@ public class EmployeeService {
 	@Autowired
 	private EmployeeRepository employeeRepository;
 
+	public List<Employee> searchEmployeesByName(String searchName) {
+        if (searchName == null || searchName.isEmpty()) {
+            return employeeRepository.findAll();  // 名前が空の場合は全員を返す
+        }
+        return employeeRepository.findByNameContainingIgnoreCase(searchName);  // あいまい検索
+    }
+
 	/**
 	 * 従業員情報を全件取得します.
 	 * 
 	 * @return 従業員情報一覧
 	 */
 	public List<Employee> showList() {
-		List<Employee> employeeList = employeeRepository.findAll();
-		return employeeList;
+		return employeeRepository.findAll();
 	}
 
 	/**
@@ -40,8 +46,7 @@ public class EmployeeService {
 	 * @throws org.springframework.dao.DataAccessException 検索されない場合は例外が発生します
 	 */
 	public Employee showDetail(Integer id) {
-		Employee employee = employeeRepository.load(id);
-		return employee;
+		return employeeRepository.load(id);
 	}
 
 	/**
